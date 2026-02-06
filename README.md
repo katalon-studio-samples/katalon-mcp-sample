@@ -63,6 +63,14 @@ Tests verify the `mcp-fetch` server at `https://remote.mcpservers.org/fetch/mcp`
 └── README.md                # This file
 ```
 
+## Supported MCP Transports
+
+| Transport | Status | Notes |
+|-----------|--------|-------|
+| Streamable HTTP | ✅ Supported | Used by remote MCP servers |
+| stdio | 🚧 TBD | For local MCP servers; requires process spawning |
+| SSE | 🚧 TBD | Legacy transport being replaced by Streamable HTTP |
+
 ## Two Testing Approaches
 
 ### Raw HTTP (Working)
