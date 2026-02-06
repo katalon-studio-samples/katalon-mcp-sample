@@ -107,9 +107,9 @@ CucumberKW.runFeatureFile('Include/features/MyFeature.feature')
 | `Run Katalon MCP BDD Tests` | **Working** | BDD tests for Katalon MCP Server |
 | `MCP Server Tools Test (Raw HTTP)` | **Working** | Tests mcp-fetch server (Raw HTTP) |
 | `MCP Server Tools Test (SSE)` | **Working** | Tests CoinGecko server via SDK SSE transport |
-| `MCP Server Tools Test` | Blocked | SDK 0.17.2+ conflicts with Katalon's json-schema-validator |
+| `MCP Server Tools Test` | **Working** | Tests mcp-fetch server via SDK Streamable HTTP |
 | `Run MCP BDD Tests (Raw HTTP)` | **Working** | BDD tests for mcp-fetch server |
-| `Run MCP BDD Tests` | Blocked | SDK library conflicts |
+| `Run MCP BDD Tests` | **Working** | BDD tests using SDK (Streamable HTTP) |
 
 ## MCP Server Testing
 
@@ -203,15 +203,36 @@ def toolsResult = mcpClient.listTools()
 
 **Other public SSE MCP servers:** Sentry, Linear, Neon, PayPal, Square, Asana, Atlassian, Webflow (see https://mcpservers.org/remote-mcp-servers)
 
-### Approach 3: MCP Java SDK - Streamable HTTP (Blocked)
+### Approach 3: MCP Java SDK - Streamable HTTP (Working)
 
-Uses MCP SDK 0.17.2+ with Streamable HTTP transport. Currently blocked by dependency conflicts.
+Uses MCP SDK 0.15.0 with Streamable HTTP transport.
 
 **Test Case:** `Test Cases/MCP Server Tools Test`
 
-**Known Issue:** SDK 0.17.2+ depends on `json-schema-validator:2.0.0+` which uses a `Dialects` class. Katalon bundles version 1.5.7 with OSGi constraint `[1.5.0,2.0.0)`. This causes `NoClassDefFoundError` at runtime.
+**Target Server:** mcp-fetch server (`https://remote.mcpservers.org/fetch/mcp`)
 
-**Resolution:** Upgrade Katalon's bundled `com.networknt.json-schema-validator` from 1.5.7 to 2.0.0+ and update the MANIFEST.MF constraint.
+**Configuration for Streamable HTTP transport:**
+```groovy
+import io.modelcontextprotocol.client.McpClient
+import io.modelcontextprotocol.client.McpSyncClient
+import io.modelcontextprotocol.client.transport.HttpClientStreamableHttpTransport
+
+String mcpServerBaseUrl = "https://remote.mcpservers.org"
+String mcpEndpoint = "/fetch/mcp"
+
+def transport = HttpClientStreamableHttpTransport.builder(mcpServerBaseUrl)
+    .endpoint(mcpEndpoint)
+    .build()
+
+McpSyncClient mcpClient = McpClient.sync(transport)
+    .requestTimeout(Duration.ofSeconds(60))
+    .build()
+
+def initResult = mcpClient.initialize()
+def toolsResult = mcpClient.listTools()
+```
+
+**Note:** SDK 0.16.0+ requires `json-schema-validator:2.0.0` which conflicts with Katalon's bundled 1.5.7. SDK 0.15.0 works without this conflict.
 
 ## BDD Testing (Cucumber)
 

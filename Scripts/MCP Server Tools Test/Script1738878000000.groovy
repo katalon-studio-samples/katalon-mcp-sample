@@ -1,48 +1,97 @@
-import static com.kms.katalon.core.testobject.ObjectRepository.findTestObject
-
 import io.modelcontextprotocol.client.McpClient
 import io.modelcontextprotocol.client.McpSyncClient
-// Note: HttpClientStreamableHttpTransport requires SDK 0.17.2+ which conflicts with Katalon's json-schema-validator
-// import io.modelcontextprotocol.client.transport.HttpClientStreamableHttpTransport
+import io.modelcontextprotocol.client.transport.HttpClientStreamableHttpTransport
 import io.modelcontextprotocol.spec.McpSchema.ListToolsResult
 
 import java.time.Duration
 
-// This test is currently blocked because:
-// - Streamable HTTP transport requires MCP SDK 0.17.2+
-// - SDK 0.17.2+ requires json-schema-validator 2.0.0+
-// - Katalon bundles json-schema-validator 1.5.7 with OSGi constraint [1.5.0,2.0.0)
-// - The version conflict causes NoClassDefFoundError at runtime
-//
-// Workaround options:
-// 1. Use Raw HTTP approach (see MCP Server Tools Test (Raw HTTP))
-// 2. Wait for Katalon to upgrade bundled json-schema-validator
-// 3. Use SDK 0.7.0 with SSE transport for SSE-compatible servers
-
-throw new RuntimeException("This test requires MCP SDK 0.17.2+ with Streamable HTTP transport. " +
-    "Use 'MCP Server Tools Test (Raw HTTP)' instead, or upgrade Katalon's json-schema-validator.")
-
-/*
-// Original code for when SDK 0.17.2+ is available:
-
+// Test configuration - mcp-fetch server (Streamable HTTP)
 String mcpServerBaseUrl = "https://remote.mcpservers.org"
 String mcpEndpoint = "/fetch/mcp"
 
+println "=========================================="
+println "MCP Server Tools Test (Streamable HTTP)"
+println "Server URL: ${mcpServerBaseUrl}${mcpEndpoint}"
+println "MCP SDK Version: 0.15.0"
+println "=========================================="
+
+// Create the Streamable HTTP transport for the remote MCP server
 def transport = HttpClientStreamableHttpTransport.builder(mcpServerBaseUrl)
     .endpoint(mcpEndpoint)
     .build()
 
+// Create synchronous MCP client
 McpSyncClient mcpClient = McpClient.sync(transport)
     .requestTimeout(Duration.ofSeconds(60))
     .build()
 
 try {
+    // Initialize the connection to the MCP server
+    println "\n[Step 1] Initializing connection to MCP server via Streamable HTTP..."
     def initResult = mcpClient.initialize()
-    println "Connected: ${initResult.serverInfo()?.name()}"
+    println "Connected successfully!"
+    println "Server Name: ${initResult.serverInfo()?.name() ?: 'Unknown'}"
+    println "Server Version: ${initResult.serverInfo()?.version() ?: 'Unknown'}"
+    println "Protocol Version: ${initResult.protocolVersion() ?: 'Unknown'}"
 
+    // Verify capabilities
+    println "\n[Step 2] Checking server capabilities..."
+    def capabilities = initResult.capabilities()
+    if (capabilities != null) {
+        println "Tools supported: ${capabilities.tools() != null}"
+        println "Resources supported: ${capabilities.resources() != null}"
+        println "Prompts supported: ${capabilities.prompts() != null}"
+    }
+
+    // List available tools
+    println "\n[Step 3] Fetching available tools..."
     ListToolsResult toolsResult = mcpClient.listTools()
-    println "Tools: ${toolsResult.tools()?.size()}"
+    def tools = toolsResult.tools()
+
+    // Verify tools are returned
+    assert tools != null : "Tools list should not be null"
+    assert tools.size() > 0 : "Server should return at least one tool"
+
+    println "Found ${tools.size()} tool(s):"
+    println "----------------------------------------"
+
+    tools.each { tool ->
+        println "\nTool: ${tool.name()}"
+        println "  Description: ${tool.description()?.take(100) ?: 'No description'}..."
+
+        // Check input schema if available
+        def inputSchema = tool.inputSchema()
+        if (inputSchema != null) {
+            println "  Input Schema Type: ${inputSchema.type() ?: 'object'}"
+            def properties = inputSchema.properties()
+            if (properties != null && !properties.isEmpty()) {
+                println "  Parameters:"
+                properties.each { paramName, paramSchema ->
+                    println "    - ${paramName}"
+                }
+            }
+            def required = inputSchema.required()
+            if (required != null && !required.isEmpty()) {
+                println "  Required: ${required.join(', ')}"
+            }
+        }
+    }
+
+    println "\n=========================================="
+    println "TEST PASSED: MCP Streamable HTTP server returned ${tools.size()} tool(s)"
+    println "=========================================="
+
+} catch (Exception e) {
+    println "\nERROR: ${e.message}"
+    e.printStackTrace()
+    throw e
 } finally {
-    mcpClient.closeGracefully()
+    // Clean up - close the client connection
+    println "\n[Cleanup] Closing MCP client connection..."
+    try {
+        mcpClient.closeGracefully()
+        println "Connection closed successfully."
+    } catch (Exception e) {
+        println "Warning: Error closing connection - ${e.message}"
+    }
 }
-*/

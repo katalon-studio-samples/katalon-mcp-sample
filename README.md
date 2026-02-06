@@ -36,9 +36,13 @@ A Katalon Studio project demonstrating how to test [MCP (Model Context Protocol)
 - BDD: `Test Cases/Run MCP BDD Tests (Raw HTTP)`
 - Suite: `Test Suites/MCP Server Test Suite - Raw`
 
-**MCP SDK approach (blocked - see Troubleshooting):**
+**MCP SDK approach (Streamable HTTP):**
 - Test Case: `Test Cases/MCP Server Tools Test`
 - Suite: `Test Suites/MCP Server Test Suite`
+
+**MCP SDK approach (SSE):**
+- Test Case: `Test Cases/MCP Server Tools Test (SSE)`
+- Suite: `Test Suites/MCP Server Test Suite - SSE`
 
 ## Test Coverage
 
@@ -81,9 +85,9 @@ A Katalon Studio project demonstrating how to test [MCP (Model Context Protocol)
 
 | Transport | Status | Notes |
 |-----------|--------|-------|
-| Streamable HTTP | ✅ Supported | Raw HTTP approach (no SDK needed) |
-| SSE | ✅ Supported | MCP SDK 0.15.0 with `HttpClientSseClientTransport` |
-| stdio | 🚧 SDK Ready | MCP SDK 0.15.0 has `StdioClientTransport` |
+| Streamable HTTP | ✅ Supported | Raw HTTP or MCP SDK 0.15.0 `HttpClientStreamableHttpTransport` |
+| SSE | ✅ Supported | MCP SDK 0.15.0 `HttpClientSseClientTransport` |
+| stdio | 🚧 SDK Ready | MCP SDK 0.15.0 `StdioClientTransport` |
 
 ## Two Testing Approaches
 
@@ -104,19 +108,20 @@ request.setRestRequestMethod("POST")
 // ... send with WS.sendRequest(request)
 ```
 
-### MCP Java SDK (SSE Working, Streamable HTTP Blocked)
+### MCP Java SDK (Working)
 
-The official SDK (`io.modelcontextprotocol.sdk:mcp`) has version constraints:
-- **0.15.0** (current): SSE and stdio transports work. No json-schema-validator conflict.
-- **0.16.0+**: Requires `json-schema-validator:2.0.0` which conflicts with Katalon's bundled 1.5.7.
+The official SDK (`io.modelcontextprotocol.sdk:mcp`) version 0.15.0 supports all transports:
+- **Streamable HTTP**: `HttpClientStreamableHttpTransport`
+- **SSE**: `HttpClientSseClientTransport`
+- **stdio**: `StdioClientTransport`
 
-Use Raw HTTP for Streamable HTTP servers until Katalon upgrades its bundled dependencies.
+**Note:** SDK 0.16.0+ requires `json-schema-validator:2.0.0` which conflicts with Katalon's bundled 1.5.7. Use 0.15.0.
 
 ## Troubleshooting
 
 **MCP SDK `NoClassDefFoundError: Dialects`**
 
-The MCP SDK requires `json-schema-validator` 2.0.0+ which conflicts with Katalon's bundled version. Use the Raw HTTP approach as a workaround.
+MCP SDK 0.16.0+ requires `json-schema-validator` 2.0.0+ which conflicts with Katalon's bundled version 1.5.7. Use SDK 0.15.0 which works without this conflict.
 
 **400 Bad Request on subsequent calls**
 
