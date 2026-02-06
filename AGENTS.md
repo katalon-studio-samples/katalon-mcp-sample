@@ -21,7 +21,9 @@ This is a **Katalon Studio WEBSERVICE project** for API test automation. Created
 ## Build Commands
 
 ```bash
-# Install dependencies (copies JARs to Drivers/ folder)
+# Install MCP SDK dependencies (copies JARs to Drivers/ folder)
+# Required for: SSE, Streamable HTTP, and stdio transport tests
+# Not required for: Raw HTTP tests
 ./gradlew clean katalonCopyDependencies
 ```
 
@@ -30,14 +32,14 @@ This is a **Katalon Studio WEBSERVICE project** for API test automation. Created
 ### Via Command Line (requires Katalon Runtime Engine)
 
 ```bash
-# Run Raw HTTP test suite (recommended - working)
+# Run Raw HTTP test suite (no SDK required)
 katalonc -noSplash -runMode=console -projectPath="$(pwd)/katalon-mcp-sample.prj" \
   -testSuitePath="Test Suites/MCP Server Test Suite - Raw" \
   -executionProfile="default"
 
-# Run Raw HTTP BDD tests
+# Run SDK-based test suite (requires SDK installation)
 katalonc -noSplash -runMode=console -projectPath="$(pwd)/katalon-mcp-sample.prj" \
-  -testSuitePath="Test Suites/MCP Server Test Suite - BDD - Raw" \
+  -testSuitePath="Test Suites/MCP Server Test Suite" \
   -executionProfile="default"
 ```
 

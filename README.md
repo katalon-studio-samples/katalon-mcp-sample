@@ -19,35 +19,33 @@ A Katalon Studio project demonstrating how to test [MCP (Model Context Protocol)
 ### Setup
 
 1. Open the project in Katalon Studio
-2. (Optional) Install SDK dependencies:
+2. Install MCP SDK (required for SDK-based tests):
    ```bash
    ./gradlew clean katalonCopyDependencies
    ```
 
 ### Run Tests
 
-**Katalon MCP Server (recommended):**
+**Raw HTTP approach (no SDK required):**
 - Test Case: `Test Cases/Katalon MCP Server Test`
-- BDD: `Test Cases/Run Katalon MCP BDD Tests`
-- Suite: `Test Suites/Katalon MCP Server Test Suite`
-
-**Raw HTTP approach (mcp-fetch server):**
 - Test Case: `Test Cases/MCP Server Tools Test (Raw HTTP)`
+- BDD: `Test Cases/Run Katalon MCP BDD Tests`
 - BDD: `Test Cases/Run MCP BDD Tests (Raw HTTP)`
-- Suite: `Test Suites/MCP Server Test Suite - Raw`
 
-**MCP SDK approach (Streamable HTTP):**
+**MCP SDK approach (requires SDK installation):**
+
+*Streamable HTTP:*
 - Test Case: `Test Cases/MCP Server Tools Test`
 - Suite: `Test Suites/MCP Server Test Suite`
 
-**MCP SDK approach (SSE):**
+*SSE:*
 - Test Case: `Test Cases/MCP Server Tools Test (SSE)`
 - Suite: `Test Suites/MCP Server Test Suite - SSE`
 
-**MCP SDK approach (stdio - local servers):**
+*stdio (local servers):*
 - Test Case: `Test Cases/MCP Server Tools Test (stdio)`
 - Suite: `Test Suites/MCP Server Test Suite - stdio`
-- Requires: `go install github.com/mark3labs/mcp-filesystem-server@latest`
+- Also requires: `go install github.com/mark3labs/mcp-filesystem-server@latest`
 
 ## Test Coverage
 
