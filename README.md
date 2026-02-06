@@ -44,6 +44,11 @@ A Katalon Studio project demonstrating how to test [MCP (Model Context Protocol)
 - Test Case: `Test Cases/MCP Server Tools Test (SSE)`
 - Suite: `Test Suites/MCP Server Test Suite - SSE`
 
+**MCP SDK approach (stdio - local servers):**
+- Test Case: `Test Cases/MCP Server Tools Test (stdio)`
+- Suite: `Test Suites/MCP Server Test Suite - stdio`
+- Requires: `go install github.com/mark3labs/mcp-filesystem-server@latest`
+
 ## Test Coverage
 
 ### Katalon Public MCP Server (`https://mcp.katalon.com/mcp`)
@@ -87,7 +92,7 @@ A Katalon Studio project demonstrating how to test [MCP (Model Context Protocol)
 |-----------|--------|-------|
 | Streamable HTTP | ✅ Supported | Raw HTTP or MCP SDK 0.15.0 `HttpClientStreamableHttpTransport` |
 | SSE | ✅ Supported | MCP SDK 0.15.0 `HttpClientSseClientTransport` |
-| stdio | 🚧 SDK Ready | MCP SDK 0.15.0 `StdioClientTransport` |
+| stdio | ✅ Supported | MCP SDK 0.15.0 `StdioClientTransport` (local servers) |
 
 ## Two Testing Approaches
 

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>Tests a local MCP server using the MCP SDK with stdio transport</description>
+   <name>MCP Server Tools Test (stdio)</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>a1b2c3d4-e5f6-7890-abcd-ef1234567892</testCaseGuid>
+</TestCaseEntity>

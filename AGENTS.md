@@ -108,6 +108,7 @@ CucumberKW.runFeatureFile('Include/features/MyFeature.feature')
 | `MCP Server Tools Test (Raw HTTP)` | **Working** | Tests mcp-fetch server (Raw HTTP) |
 | `MCP Server Tools Test (SSE)` | **Working** | Tests CoinGecko server via SDK SSE transport |
 | `MCP Server Tools Test` | **Working** | Tests mcp-fetch server via SDK Streamable HTTP |
+| `MCP Server Tools Test (stdio)` | **Working** | Tests local mcp-filesystem-server via SDK stdio |
 | `Run MCP BDD Tests (Raw HTTP)` | **Working** | BDD tests for mcp-fetch server |
 | `Run MCP BDD Tests` | **Working** | BDD tests using SDK (Streamable HTTP) |
 
@@ -233,6 +234,44 @@ def toolsResult = mcpClient.listTools()
 ```
 
 **Note:** SDK 0.16.0+ requires `json-schema-validator:2.0.0` which conflicts with Katalon's bundled 1.5.7. SDK 0.15.0 works without this conflict.
+
+### Approach 4: MCP Java SDK - stdio (Working)
+
+Uses MCP SDK 0.15.0 with stdio transport for local MCP servers.
+
+**Test Case:** `Test Cases/MCP Server Tools Test (stdio)`
+
+**Target Server:** mcp-filesystem-server (local, installed via `go install github.com/mark3labs/mcp-filesystem-server@latest`)
+
+**Server Location:** `$GOPATH/bin/mcp-filesystem-server` (default: `~/go/bin/mcp-filesystem-server`)
+
+**Configuration for stdio transport:**
+```groovy
+import io.modelcontextprotocol.client.McpClient
+import io.modelcontextprotocol.client.McpSyncClient
+import io.modelcontextprotocol.client.transport.ServerParameters
+import io.modelcontextprotocol.client.transport.StdioClientTransport
+import io.modelcontextprotocol.json.jackson.JacksonMcpJsonMapper
+import com.fasterxml.jackson.databind.ObjectMapper
+
+String serverPath = "${System.getProperty('user.home')}/go/bin/mcp-filesystem-server"
+String allowedDirectory = "/path/to/allowed/dir"
+
+def serverParams = ServerParameters.builder(serverPath)
+    .args([allowedDirectory])
+    .build()
+
+def objectMapper = new ObjectMapper()
+def jsonMapper = new JacksonMcpJsonMapper(objectMapper)
+def transport = new StdioClientTransport(serverParams, jsonMapper)
+
+McpSyncClient mcpClient = McpClient.sync(transport)
+    .requestTimeout(Duration.ofSeconds(30))
+    .build()
+
+def initResult = mcpClient.initialize()
+def toolsResult = mcpClient.listTools()
+```
 
 ## BDD Testing (Cucumber)
 
