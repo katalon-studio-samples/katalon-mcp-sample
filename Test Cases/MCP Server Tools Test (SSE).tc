@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>Tests a remote MCP server using the MCP SDK with SSE transport</description>
+   <name>MCP Server Tools Test (SSE)</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>f1a2b3c4-d5e6-7890-abcd-ef1234567891</testCaseGuid>
+</TestCaseEntity>

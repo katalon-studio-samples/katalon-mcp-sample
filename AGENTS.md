@@ -60,7 +60,9 @@ katalonc -noSplash -runMode=console -projectPath="$(pwd)/katalon-mcp-sample.prj"
 
 | Dependency | Version | Purpose |
 |------------|---------|---------|
-| `io.modelcontextprotocol.sdk:mcp` | 0.17.2 | MCP Java SDK (has library conflicts) |
+| `io.modelcontextprotocol.sdk:mcp` | 0.7.0 | MCP Java SDK (SSE & stdio transports) |
+
+**Note:** Version 0.17.2+ adds Streamable HTTP transport but requires `json-schema-validator:2.0.0` which conflicts with Katalon's bundled 1.5.7. Use 0.7.0 until Katalon upgrades its bundled version.
 
 ## Project Structure
 
@@ -101,10 +103,11 @@ CucumberKW.runFeatureFile('Include/features/MyFeature.feature')
 
 | Test Case | Status | Notes |
 |-----------|--------|-------|
-| `Katalon MCP Server Test` | **Working** | Tests Katalon Public MCP Server |
+| `Katalon MCP Server Test` | **Working** | Tests Katalon Public MCP Server (Raw HTTP) |
 | `Run Katalon MCP BDD Tests` | **Working** | BDD tests for Katalon MCP Server |
-| `MCP Server Tools Test (Raw HTTP)` | **Working** | Tests mcp-fetch server |
-| `MCP Server Tools Test` | Blocked | SDK library conflicts |
+| `MCP Server Tools Test (Raw HTTP)` | **Working** | Tests mcp-fetch server (Raw HTTP) |
+| `MCP Server Tools Test (SSE)` | **Working** | Tests CoinGecko server via SDK SSE transport |
+| `MCP Server Tools Test` | Blocked | SDK 0.17.2+ conflicts with Katalon's json-schema-validator |
 | `Run MCP BDD Tests (Raw HTTP)` | **Working** | BDD tests for mcp-fetch server |
 | `Run MCP BDD Tests` | Blocked | SDK library conflicts |
 
@@ -171,30 +174,44 @@ Uses Katalon's native WS keywords with JSON-RPC 2.0. No external dependencies ne
 
 5. **MCP Lifecycle:** Initialize → Send `notifications/initialized` → Call methods (tools/list, tools/call, etc.)
 
-### Approach 2: MCP Java SDK (Has Library Conflicts)
+### Approach 2: MCP Java SDK - SSE Transport (Working)
 
-Uses the official MCP Java SDK. Currently blocked by dependency conflicts.
+Uses MCP SDK 0.7.0 with SSE transport for servers that support the legacy SSE protocol.
+
+**Test Case:** `Test Cases/MCP Server Tools Test (SSE)`
+
+**Target Server:** CoinGecko Public MCP Server (`https://mcp.api.coingecko.com/sse`)
+
+**Configuration for SSE transport:**
+```groovy
+import io.modelcontextprotocol.client.McpClient
+import io.modelcontextprotocol.client.McpSyncClient
+import io.modelcontextprotocol.client.transport.HttpClientSseClientTransport
+
+String mcpServerSseUrl = "https://mcp.api.coingecko.com/sse"
+
+def transport = HttpClientSseClientTransport.builder(mcpServerSseUrl)
+    .build()
+
+McpSyncClient mcpClient = McpClient.sync(transport)
+    .requestTimeout(Duration.ofSeconds(60))
+    .build()
+
+def initResult = mcpClient.initialize()
+def toolsResult = mcpClient.listTools()
+```
+
+**Other public SSE MCP servers:** Sentry, Linear, Neon, PayPal, Square, Asana, Atlassian, Webflow (see https://mcpservers.org/remote-mcp-servers)
+
+### Approach 3: MCP Java SDK - Streamable HTTP (Blocked)
+
+Uses MCP SDK 0.17.2+ with Streamable HTTP transport. Currently blocked by dependency conflicts.
 
 **Test Case:** `Test Cases/MCP Server Tools Test`
 
-**Configuration for HTTP transport:**
-```groovy
-String mcpServerBaseUrl = "https://remote.mcpservers.org"
-String mcpEndpoint = "/fetch/mcp"
+**Known Issue:** SDK 0.17.2+ depends on `json-schema-validator:2.0.0+` which uses a `Dialects` class. Katalon bundles version 1.5.7 with OSGi constraint `[1.5.0,2.0.0)`. This causes `NoClassDefFoundError` at runtime.
 
-def transport = HttpClientStreamableHttpTransport.builder(mcpServerBaseUrl)
-    .endpoint(mcpEndpoint)  // Must use separate baseUrl and endpoint
-    .build()
-```
-
-**Known Issue:** The MCP SDK depends on `json-schema-validator` 2.0.0+ which uses a `Dialects` class that doesn't exist in Katalon's bundled version (1.5.7). This causes `NoClassDefFoundError` at runtime.
-
-**Attempted workarounds:**
-1. Excluding Katalon's bundled libraries via Project Settings > Library Management - breaks Katalon internals
-2. Excluding SDK's validator in build.gradle - breaks SDK schema validation
-3. Both exclusion approaches lead to `ClassNotFoundException` or `NoClassDefFoundError`
-
-**Goal:** Eventually get MCP SDK working for full protocol support
+**Resolution:** Upgrade Katalon's bundled `com.networknt.json-schema-validator` from 1.5.7 to 2.0.0+ and update the MANIFEST.MF constraint.
 
 ## BDD Testing (Cucumber)
 
