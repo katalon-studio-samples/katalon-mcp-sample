@@ -190,8 +190,8 @@ import io.modelcontextprotocol.client.transport.HttpClientSseClientTransport
 
 String mcpServerSseUrl = "https://mcp.api.coingecko.com/sse"
 
-def transport = HttpClientSseClientTransport.builder(mcpServerSseUrl)
-    .build()
+// SDK 0.7.0 uses constructor (builder pattern added in later versions)
+def transport = new HttpClientSseClientTransport(mcpServerSseUrl)
 
 McpSyncClient mcpClient = McpClient.sync(transport)
     .requestTimeout(Duration.ofSeconds(60))

@@ -15,8 +15,8 @@ println "MCP SDK Version: 0.7.0"
 println "=========================================="
 
 // Create the SSE transport for the remote MCP server
-def transport = HttpClientSseClientTransport.builder(mcpServerSseUrl)
-    .build()
+// Note: SDK 0.7.0 uses constructor, not builder pattern (builder was added in later versions)
+def transport = new HttpClientSseClientTransport(mcpServerSseUrl)
 
 // Create synchronous MCP client
 McpSyncClient mcpClient = McpClient.sync(transport)
