@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>Runs BDD feature tests for MCP server using raw HTTP (no SDK dependencies)</description>
+   <name>Run MCP BDD Tests (Raw HTTP)</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>f6a7b8c9-d012-3456-efab-789012345678</testCaseGuid>
+</TestCaseEntity>

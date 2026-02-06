@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>Tests the remote MCP server using raw HTTP/JSON-RPC calls via Katalon WS keywords</description>
+   <name>MCP Server Tools Test (Raw HTTP)</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>e5f6a7b8-c901-2345-abcd-678901234567</testCaseGuid>
+</TestCaseEntity>

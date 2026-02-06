@@ -1,0 +1,25 @@
+# Gradle
+.gradle/
+build/
+
+# Katalon Studio generated
+bin/
+Libs/
+Reports/
+Drivers/
+.classpath
+.project
+.cache/
+
+# IDE settings
+.settings/
+
+# Claude Code
+.claude/
+
+# Output
+output/
+!output/.gitkeep
+
+# OS files
+.DS_Store

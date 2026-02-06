@@ -1,0 +1,15 @@
+plugins {
+  id 'java'
+  id "com.katalon.gradle-plugin" version "0.1.2"
+}
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  // MCP (Model Context Protocol) Java SDK - exclude json-schema-validator to avoid Katalon conflicts
+  implementation('io.modelcontextprotocol.sdk:mcp:0.17.2') {
+    exclude group: 'com.networknt', module: 'json-schema-validator'
+  }
+}
