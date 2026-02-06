@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>Runs BDD tests for the Katalon Public MCP Server using Streamable HTTP transport</description>
+   <name>Run Katalon MCP BDD Tests</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>b2c3d4e5-f6a7-8901-bcde-f23456789012</testCaseGuid>
+</TestCaseEntity>

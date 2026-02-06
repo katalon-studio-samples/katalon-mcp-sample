@@ -8,7 +8,9 @@ This is a **Katalon Studio WEBSERVICE project** for API test automation. Created
 
 **Purpose:** Test MCP (Model Context Protocol) servers using both native Katalon HTTP capabilities and the official MCP Java SDK.
 
-**Target MCP Server:** `https://remote.mcpservers.org/fetch/mcp` (mcp-fetch server)
+**Target MCP Servers:**
+- `https://remote.mcpservers.org/fetch/mcp` (mcp-fetch server)
+- `https://mcp.katalon.com/mcp` (Katalon Public MCP Server)
 
 ## Prerequisites
 
@@ -99,9 +101,11 @@ CucumberKW.runFeatureFile('Include/features/MyFeature.feature')
 
 | Test Case | Status | Notes |
 |-----------|--------|-------|
-| `MCP Server Tools Test (Raw HTTP)` | **Working** | Use this |
+| `Katalon MCP Server Test` | **Working** | Tests Katalon Public MCP Server |
+| `Run Katalon MCP BDD Tests` | **Working** | BDD tests for Katalon MCP Server |
+| `MCP Server Tools Test (Raw HTTP)` | **Working** | Tests mcp-fetch server |
 | `MCP Server Tools Test` | Blocked | SDK library conflicts |
-| `Run MCP BDD Tests (Raw HTTP)` | **Working** | Use this |
+| `Run MCP BDD Tests (Raw HTTP)` | **Working** | BDD tests for mcp-fetch server |
 | `Run MCP BDD Tests` | Blocked | SDK library conflicts |
 
 ## MCP Server Testing
@@ -200,6 +204,7 @@ Feature files are in `Include/features/` and step definitions in `Include/script
 
 | Class | Feature File | Approach | Status |
 |-------|-------------|----------|--------|
+| `KatalonMCPServerSteps` | `Katalon_MCP_Server.feature` | Streamable HTTP | **Working** |
 | `MCPServerStepsRawHttp` | `MCP_Server_Tools_RawHttp.feature` | Raw HTTP/JSON-RPC | **Working** |
 | `MCPServerSteps` | `MCP_Server_Tools.feature` | MCP Java SDK | Has library conflicts |
 
@@ -212,6 +217,25 @@ To avoid conflicts, the two approaches use different step text patterns:
 - **SDK:** Steps do not contain "raw HTTP" (e.g., `When I initialize the MCP client`)
 
 ### Step Definition Patterns
+
+**Katalon MCP steps (KatalonMCPServerSteps.groovy):**
+- `Given a Katalon MCP server at {string} with endpoint {string}`
+- `When I initialize the Katalon MCP client`
+- `When I request the list of tools from Katalon MCP`
+- `When I call the Katalon MCP {string} tool with query {string}`
+- `When I call the Katalon MCP {string} tool with query {string} and product {string}`
+- `Then the Katalon MCP connection should be successful`
+- `Then the Katalon MCP server name should be {string}`
+- `Then the Katalon MCP protocol version should be {string}`
+- `Then the Katalon MCP server should support tools`
+- `Then the Katalon MCP server should support resources`
+- `Then the Katalon MCP server should support prompts`
+- `Then the Katalon MCP tools list should not be empty`
+- `Then the Katalon MCP tools list should contain a tool named {string}`
+- `Then the Katalon MCP {string} tool should have a required parameter {string}`
+- `Then the Katalon MCP {string} tool should have an optional parameter {string}`
+- `Then the Katalon MCP tool call should be successful`
+- `Then the Katalon MCP tool result should contain search results`
 
 **Raw HTTP steps (MCPServerStepsRawHttp.groovy):**
 - `Given a raw HTTP MCP server at {string} with endpoint {string}`
@@ -237,7 +261,11 @@ To avoid conflicts, the two approaches use different step text patterns:
 ### BDD Test Tags
 
 - `@MCP` - All MCP-related tests
+- `@KatalonMCP` - Katalon MCP Server tests (triggers cleanup hook in KatalonMCPServerSteps)
 - `@RawHTTP` - Raw HTTP approach tests (triggers cleanup hook in MCPServerStepsRawHttp)
+- `@Smoke` - Basic connectivity and capability tests
+- `@Tools` - Tool listing and schema validation tests
+- `@Integration` - Tool execution tests
 
 ## Troubleshooting
 
@@ -253,6 +281,18 @@ To avoid conflicts, the two approaches use different step text patterns:
 1. Wait for Katalon to upgrade their bundled json-schema-validator
 2. Use an older MCP SDK version that's compatible with json-schema-validator 1.x
 3. Shadow/relocate the conflicting classes in build.gradle
+
+### BDD Steps "Undefined" After Adding New Step Definitions
+
+**Error:** `8 Scenarios (8 undefined), 41 Steps (41 undefined)` - All steps show `# null` instead of method references.
+
+**Cause:** Katalon Studio hasn't compiled/detected newly added step definition files.
+
+**Solution:** Close and reopen the project in Katalon Studio. Alternatively:
+- Right-click on the project → **Refresh**
+- Or use **Project → Refresh** (F5)
+
+This forces Katalon to recompile Groovy files and make new step definitions available to Cucumber.
 
 ### 400 Bad Request on MCP Calls
 
@@ -295,7 +335,18 @@ if (responseBody.contains("data: ")) {
 - `resources/list` - Get available resources (if supported)
 - `prompts/list` - Get available prompts (if supported)
 
+**Katalon Public MCP Server capabilities:**
+- Server URL: `https://mcp.katalon.com/mcp`
+- Tools: Yes
+  - `fetch` - Fetch Katalon documentation pages (required: `id`)
+  - `search` - General search across all Katalon docs (required: `query`)
+  - `search_katalon_documentation_with_filter` - Filtered search by product (required: `query`, optional: `products`, `max_results`)
+- Resources: Yes
+- Prompts: Yes
+- Tasks: Yes
+
 **mcp-fetch server capabilities:**
+- Server URL: `https://remote.mcpservers.org/fetch/mcp`
 - Tools: Yes (fetch tool for URL fetching)
 - Resources: No
 - Prompts: No

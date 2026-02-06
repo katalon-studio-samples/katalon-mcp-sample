@@ -11,7 +11,7 @@
    <modifiedEdition>ENTERPRISE</modifiedEdition>
    <modifiedVersion>10.4.2</modifiedVersion>
    <pageLoadTimeout>0</pageLoadTimeout>
-   <projectFileLocation>/Users/coty/Katalon Studio/mcp-test-example/katalon-mcp-sample.prj</projectFileLocation>
+   <projectFileLocation>/Users/coty/Katalon Studio/katalon-mcp-sample/katalon-mcp-sample.prj</projectFileLocation>
    <sourceContent>
       <sourceFolderList>
          <sourceFolderConfiguration>

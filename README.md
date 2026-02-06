@@ -26,7 +26,12 @@ A Katalon Studio project demonstrating how to test [MCP (Model Context Protocol)
 
 ### Run Tests
 
-**Raw HTTP approach (recommended):**
+**Katalon MCP Server (recommended):**
+- Test Case: `Test Cases/Katalon MCP Server Test`
+- BDD: `Test Cases/Run Katalon MCP BDD Tests`
+- Suite: `Test Suites/Katalon MCP Server Test Suite`
+
+**Raw HTTP approach (mcp-fetch server):**
 - Test Case: `Test Cases/MCP Server Tools Test (Raw HTTP)`
 - BDD: `Test Cases/Run MCP BDD Tests (Raw HTTP)`
 - Suite: `Test Suites/MCP Server Test Suite - Raw`
@@ -38,7 +43,17 @@ A Katalon Studio project demonstrating how to test [MCP (Model Context Protocol)
 
 ## Test Coverage
 
-Tests verify the `mcp-fetch` server at `https://remote.mcpservers.org/fetch/mcp`:
+### Katalon Public MCP Server (`https://mcp.katalon.com/mcp`)
+
+| Scenario | Description |
+|----------|-------------|
+| Connection | Initialize MCP client, verify server info |
+| Capabilities | Check tools/resources/prompts support |
+| Tools List | Retrieve and validate available tools (fetch, search, search_katalon_documentation_with_filter) |
+| Tool Schema | Verify tool parameters (required/optional) |
+| Tool Execution | Execute search tools and verify results |
+
+### mcp-fetch Server (`https://remote.mcpservers.org/fetch/mcp`)
 
 | Scenario | Description |
 |----------|-------------|

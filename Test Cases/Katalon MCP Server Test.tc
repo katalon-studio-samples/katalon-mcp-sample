@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>Tests the Katalon Public MCP Server using Streamable HTTP transport with JSON-RPC calls</description>
+   <name>Katalon MCP Server Test</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>a1b2c3d4-e5f6-7890-abcd-ef1234567890</testCaseGuid>
+</TestCaseEntity>
