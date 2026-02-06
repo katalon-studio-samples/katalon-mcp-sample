@@ -60,9 +60,9 @@ katalonc -noSplash -runMode=console -projectPath="$(pwd)/katalon-mcp-sample.prj"
 
 | Dependency | Version | Purpose |
 |------------|---------|---------|
-| `io.modelcontextprotocol.sdk:mcp` | 0.7.0 | MCP Java SDK (SSE & stdio transports) |
+| `io.modelcontextprotocol.sdk:mcp` | 0.15.0 | MCP Java SDK (SSE & stdio transports) |
 
-**Note:** Version 0.17.2+ adds Streamable HTTP transport but requires `json-schema-validator:2.0.0` which conflicts with Katalon's bundled 1.5.7. Use 0.7.0 until Katalon upgrades its bundled version.
+**Note:** Version 0.16.0+ requires `json-schema-validator:2.0.0` which conflicts with Katalon's bundled 1.5.7. Use 0.15.0 until Katalon upgrades its bundled version.
 
 ## Project Structure
 
@@ -190,8 +190,8 @@ import io.modelcontextprotocol.client.transport.HttpClientSseClientTransport
 
 String mcpServerSseUrl = "https://mcp.api.coingecko.com/sse"
 
-// SDK 0.7.0 uses constructor (builder pattern added in later versions)
-def transport = new HttpClientSseClientTransport(mcpServerSseUrl)
+def transport = HttpClientSseClientTransport.builder(mcpServerSseUrl)
+    .build()
 
 McpSyncClient mcpClient = McpClient.sync(transport)
     .requestTimeout(Duration.ofSeconds(60))

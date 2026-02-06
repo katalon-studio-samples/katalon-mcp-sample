@@ -8,8 +8,8 @@ repositories {
 }
 
 dependencies {
-  // MCP (Model Context Protocol) Java SDK 0.7.0
+  // MCP (Model Context Protocol) Java SDK 0.15.0
   // Supports SSE and stdio transports
-  // Note: Streamable HTTP requires 0.17.2+ which needs Katalon's json-schema-validator upgraded
-  implementation 'io.modelcontextprotocol.sdk:mcp:0.7.0'
+  // Note: 0.16.0+ requires json-schema-validator 2.0+ which conflicts with Katalon's bundled 1.5.7
+  implementation 'io.modelcontextprotocol.sdk:mcp:0.15.0'
 }

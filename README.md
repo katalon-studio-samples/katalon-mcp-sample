@@ -82,8 +82,8 @@ A Katalon Studio project demonstrating how to test [MCP (Model Context Protocol)
 | Transport | Status | Notes |
 |-----------|--------|-------|
 | Streamable HTTP | ✅ Supported | Raw HTTP approach (no SDK needed) |
-| SSE | ✅ Supported | MCP SDK 0.7.0 with `HttpClientSseClientTransport` |
-| stdio | 🚧 SDK Ready | MCP SDK 0.7.0 has `StdioClientTransport` |
+| SSE | ✅ Supported | MCP SDK 0.15.0 with `HttpClientSseClientTransport` |
+| stdio | 🚧 SDK Ready | MCP SDK 0.15.0 has `StdioClientTransport` |
 
 ## Two Testing Approaches
 
@@ -104,13 +104,13 @@ request.setRestRequestMethod("POST")
 // ... send with WS.sendRequest(request)
 ```
 
-### MCP Java SDK (Blocked)
+### MCP Java SDK (SSE Working, Streamable HTTP Blocked)
 
-The official SDK (`io.modelcontextprotocol.sdk:mcp`) is available but has version constraints:
-- **0.7.0**: SSE and stdio transports work. No json-schema-validator conflict.
-- **0.17.2+**: Adds Streamable HTTP but conflicts with Katalon's bundled `json-schema-validator:1.5.7`.
+The official SDK (`io.modelcontextprotocol.sdk:mcp`) has version constraints:
+- **0.15.0** (current): SSE and stdio transports work. No json-schema-validator conflict.
+- **0.16.0+**: Requires `json-schema-validator:2.0.0` which conflicts with Katalon's bundled 1.5.7.
 
-Use the Raw HTTP approach until Katalon upgrades its bundled dependencies.
+Use Raw HTTP for Streamable HTTP servers until Katalon upgrades its bundled dependencies.
 
 ## Troubleshooting
 

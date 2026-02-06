@@ -11,12 +11,12 @@ String mcpServerSseUrl = "https://mcp.api.coingecko.com/sse"
 println "=========================================="
 println "MCP Server Tools Test (SSE Transport)"
 println "Server URL: ${mcpServerSseUrl}"
-println "MCP SDK Version: 0.7.0"
+println "MCP SDK Version: 0.15.0"
 println "=========================================="
 
 // Create the SSE transport for the remote MCP server
-// Note: SDK 0.7.0 uses constructor, not builder pattern (builder was added in later versions)
-def transport = new HttpClientSseClientTransport(mcpServerSseUrl)
+def transport = HttpClientSseClientTransport.builder(mcpServerSseUrl)
+    .build()
 
 // Create synchronous MCP client
 McpSyncClient mcpClient = McpClient.sync(transport)
