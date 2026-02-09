@@ -11,6 +11,7 @@ import io.modelcontextprotocol.client.McpSyncClient
 import io.modelcontextprotocol.client.transport.HttpClientStreamableHttpTransport
 import io.modelcontextprotocol.spec.McpSchema
 
+import com.katalon.mcp.utils.SslHelper
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.time.Duration
@@ -39,8 +40,8 @@ class MCPServerSteps {
 				.header("Accept", "application/json, text/event-stream")
 				.timeout(Duration.ofSeconds(60))
 
-		// Create HTTP client with timeouts
-		def clientBuilder = HttpClient.newBuilder()
+		// Create HTTP client with timeouts and trust-all SSL for transparent proxies
+		def clientBuilder = SslHelper.createTrustAllClientBuilder()
 				.connectTimeout(Duration.ofSeconds(30))
 
 		// Create the Streamable HTTP transport

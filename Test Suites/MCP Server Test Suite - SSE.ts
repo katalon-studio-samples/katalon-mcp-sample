@@ -15,7 +15,7 @@
       <guid>f6a7b8c9-d0e1-2345-fab0-678901234567</guid>
       <isReuseDriver>false</isReuseDriver>
       <isRun>true</isRun>
-      <testCaseId>Test Cases/MCP Server Tools Test (SSE)</testCaseId>
+      <testCaseId>Test Cases/Transparent Proxy/MCP Server Tools Test (SSE)</testCaseId>
       <usingDataBindingAtTestSuiteLevel>true</usingDataBindingAtTestSuiteLevel>
    </testCaseLink>
 </TestSuiteEntity>

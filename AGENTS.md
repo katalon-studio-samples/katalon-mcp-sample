@@ -346,6 +346,13 @@ To avoid conflicts, the two approaches use different step text patterns:
 - `@Tools` - Tool listing and schema validation tests
 - `@Integration` - Tool execution tests
 
+## SSL / Transparent Proxy Support
+
+Transparent Proxy test scripts bypass SSL certificate verification using `com.katalon.mcp.utils.SslHelper` (`Include/scripts/groovy/com/katalon/mcp/utils/SslHelper.groovy`). This allows tests to work behind corporate transparent HTTPS proxies that re-sign TLS traffic.
+
+- **SDK transports** (Streamable HTTP, SSE): Use `SslHelper.createTrustAllClientBuilder()` passed via `.clientBuilder()` on the transport builder.
+- **Raw HTTP** (Katalon `WS.sendRequest()`): Controlled by Katalon Studio project settings (not code).
+
 ## Troubleshooting
 
 ### MCP SDK Library Conflicts

@@ -1,6 +1,6 @@
 import io.modelcontextprotocol.client.McpClient
 import io.modelcontextprotocol.client.McpSyncClient
-import io.modelcontextprotocol.client.transport.HttpClientStreamableHttpTransport
+import io.modelcontextprotocol.client.transport.HttpClientSseClientTransport
 import io.modelcontextprotocol.spec.McpSchema.ListToolsResult
 
 import com.katalon.mcp.utils.SslHelper
@@ -8,26 +8,26 @@ import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 import java.time.Duration
 
-// Test configuration - mcp-fetch server (Streamable HTTP)
-String mcpServerBaseUrl = "https://remote.mcpservers.org"
-String mcpEndpoint = "/fetch/mcp"
+// Test configuration - CoinGecko public SSE MCP server
+String mcpServerSseUrl = "https://mcp.api.coingecko.com/sse"
 
 println "=========================================="
-println "MCP Server Tools Test (Streamable HTTP)"
-println "Server URL: ${mcpServerBaseUrl}${mcpEndpoint}"
+println "MCP Server Tools Test (SSE Transport + Transparent Proxy)"
+println "Server URL: ${mcpServerSseUrl}"
 println "MCP SDK Version: 0.15.0"
 println "=========================================="
 
 // Preflight: detect transparent proxy SSL interception
-// Uses a short timeout since we only care about the SSL handshake, not the full response
+// Uses HEAD against the base host to avoid hanging on the SSE streaming endpoint
 println "\n[Preflight] Checking for transparent proxy SSL interception..."
 try {
+    def preflightUri = URI.create(mcpServerSseUrl).resolve("/")
     java.net.http.HttpClient.newBuilder().build()
         .send(
             HttpRequest.newBuilder()
-                .uri(URI.create(mcpServerBaseUrl + mcpEndpoint))
+                .uri(preflightUri)
                 .timeout(Duration.ofSeconds(5))
-                .GET()
+                .method("HEAD", HttpRequest.BodyPublishers.noBody())
                 .build(),
             HttpResponse.BodyHandlers.ofString()
         )
@@ -37,7 +37,6 @@ try {
 } catch (java.net.http.HttpTimeoutException e) {
     println "No transparent proxy detected — request timed out (SSL handshake succeeded)"
 } catch (java.io.IOException e) {
-    // SSLHandshakeException is wrapped in IOException by HttpClient
     if (e.cause instanceof javax.net.ssl.SSLHandshakeException) {
         println "Transparent proxy detected — SSL handshake failed (${e.cause.message})"
     } else {
@@ -47,10 +46,9 @@ try {
     println "Preflight inconclusive (${e.class.simpleName}: ${e.message})"
 }
 
-// Create the Streamable HTTP transport for the remote MCP server
+// Create the SSE transport for the remote MCP server
 // Use trust-all SSL to work behind transparent HTTPS proxies
-def transport = HttpClientStreamableHttpTransport.builder(mcpServerBaseUrl)
-    .endpoint(mcpEndpoint)
+def transport = HttpClientSseClientTransport.builder(mcpServerSseUrl)
     .clientBuilder(SslHelper.createTrustAllClientBuilder())
     .build()
 
@@ -61,7 +59,7 @@ McpSyncClient mcpClient = McpClient.sync(transport)
 
 try {
     // Initialize the connection to the MCP server
-    println "\n[Step 1] Initializing connection to MCP server via Streamable HTTP..."
+    println "\n[Step 1] Initializing connection to MCP server via SSE..."
     def initResult = mcpClient.initialize()
     println "Connected successfully!"
     println "Server Name: ${initResult.serverInfo()?.name() ?: 'Unknown'}"
@@ -112,7 +110,7 @@ try {
     }
 
     println "\n=========================================="
-    println "TEST PASSED: MCP Streamable HTTP server returned ${tools.size()} tool(s)"
+    println "TEST PASSED: MCP SSE server returned ${tools.size()} tool(s)"
     println "=========================================="
 
 } catch (Exception e) {

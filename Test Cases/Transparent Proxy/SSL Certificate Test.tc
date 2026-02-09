@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>Tests SSL certificate handling for both Katalon WS and java.net.http.HttpClient (MCP SDK stack)</description>
+   <name>SSL Certificate Test</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>a1b2c3d4-ssl0-test-0000-000000000001</testCaseGuid>
+</TestCaseEntity>

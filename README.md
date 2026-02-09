@@ -8,6 +8,7 @@ A Katalon Studio project demonstrating how to test [MCP (Model Context Protocol)
 - Testing MCP servers with the official MCP Java SDK
 - BDD/Cucumber test structure for MCP server validation
 - Handling MCP protocol specifics: JSON-RPC 2.0, SSE responses, session management
+- Working behind transparent HTTPS proxies that intercept/re-sign TLS traffic
 
 ## Quick Start
 
@@ -47,6 +48,10 @@ A Katalon Studio project demonstrating how to test [MCP (Model Context Protocol)
 - Suite: `Test Suites/MCP Server Test Suite - stdio`
 - Also requires: `go install github.com/mark3labs/mcp-filesystem-server@latest`
 
+**Transparent proxy tests (requires SDK installation):**
+- Test Case: `Test Cases/Transparent Proxy/MCP Server Tools Test (SSE)` — SSE transport with preflight proxy detection and SSL bypass
+- Test Case: `Test Cases/Transparent Proxy/SSL Certificate Test` — Validates `SslHelper` against [badssl.com](https://badssl.com/) endpoints
+
 ## Test Coverage
 
 ### Katalon Public MCP Server (`https://mcp.katalon.com/mcp`)
@@ -80,9 +85,26 @@ A Katalon Studio project demonstrating how to test [MCP (Model Context Protocol)
 │       └── stepDefinitions/ # Cucumber step definitions
 ├── Drivers/                 # External JARs (from Gradle)
 ├── build.gradle             # Dependencies
-├── CLAUDE.md                # Detailed technical documentation
+├── CLAUDE.md                # Detailed technical documentation (→ AGENTS.md)
 └── README.md                # This file
 ```
+
+### SSL Helper
+
+`Include/scripts/groovy/com/katalon/mcp/utils/SslHelper.groovy` provides SSL bypass for MCP SDK transports (`java.net.http.HttpClient`) when running behind a transparent HTTPS proxy.
+
+```groovy
+import com.katalon.mcp.utils.SslHelper
+
+// Pass to any MCP SDK transport builder
+def transport = HttpClientSseClientTransport.builder(url)
+    .clientBuilder(SslHelper.createTrustAllClientBuilder())
+    .build()
+```
+
+The Transparent Proxy test scripts also include a **preflight check** that detects proxy interception before connecting, so test output clearly indicates whether a proxy is present.
+
+**Note:** For Katalon `WS.sendRequest()` (Raw HTTP tests), SSL bypass is controlled by Katalon Studio project settings, not code.
 
 ## Supported MCP Transports
 
