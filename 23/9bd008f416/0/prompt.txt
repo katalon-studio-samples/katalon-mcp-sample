@@ -1,0 +1,80 @@
+Implement the following plan:
+
+# Plan: Centralize MCP Server URLs in Object Repository
+
+## Context
+
+Network MCP server URLs are hardcoded in multiple test scripts and duplicated across regular and transparent proxy variants. The Object Repository already stores URLs for two servers (`Fetch MCP.rs`, `Katalon MCP.rs`) but they're only used by Raw HTTP tests. SDK-based tests (Streamable HTTP, SSE) hardcode their own URLs. This change centralizes all network MCP URLs in the Object Repository so there's a single place to update them.
+
+## Changes
+
+### 1. Create new test object: `Object Repository/CoinGecko MCP SSE.rs`
+
+New `.rs` file for the CoinGecko SSE server, following the pattern of existing test objects.
+
+- **URL**: `https://mcp.api.coingecko.com/sse`
+- **Method**: POST
+- **Headers**: Content-Type: application/json, Accept: application/json, text/event-stream
+- **Description**: Base MCP request template for CoinGecko SSE server
+
+### 2. Update SDK scripts to read URLs from Object Repository
+
+For each script, replace the hardcoded URL string with a `findTestObject()` call to extract the URL via `.getRestUrl()`.
+
+**Files to modify:**
+
+| Script | Currently | Will use |
+|--------|-----------|----------|
+| `Scripts/MCP Server Tools Test/Script1738878000000.groovy` | `"https://remote.mcpservers.org"` + `"/fetch/mcp"` | `findTestObject('Fetch MCP').getRestUrl()` |
+| `Scripts/MCP Server Tools Test (SSE)/Script1738884000000.groovy` | `"https://mcp.api.coingecko.com/sse"` | `findTestObject('CoinGecko MCP SSE').getRestUrl()` |
+| `Scripts/Transparent Proxy/MCP Server Tools Test (SSE)/Script1738884000000.groovy` | `"https://mcp.api.coingecko.com/sse"` | `findTestObject('CoinGecko MCP SSE').getRestUrl()` |
+
+**Pattern for Streamable HTTP** (needs base URL + endpoint split):
+```groovy
+import static com.kms.katalon.core.testobject.ObjectRepository.findTestObject
+
+String fullUrl = findTestObject('Fetch MCP').getRestUrl()
+URI uri = URI.create(fullUrl)
+String mcpServerBaseUrl = "${uri.scheme}://${uri.host}" + (uri.port > 0 ? ":${uri.port}" : "")
+String mcpEndpoint = uri.path
+```
+
+**Pattern for SSE** (uses full URL directly):
+```groovy
+import static com.kms.katalon.core.testobject.ObjectRepository.findTestObject
+
+String mcpServerSseUrl = findTestObject('CoinGecko MCP SSE').getRestUrl()
+```
+
+### 3. Update AGENTS.md
+
+Add the new test object to the Object Repository section and note the pattern for reading URLs from test objects in SDK scripts.
+
+## Files to create
+- `Object Repository/CoinGecko MCP SSE.rs`
+
+## Files to modify
+- `Scripts/MCP Server Tools Test/Script1738878000000.groovy`
+- `Scripts/MCP Server Tools Test (SSE)/Script1738884000000.groovy`
+- `Scripts/Transparent Proxy/MCP Server Tools Test (SSE)/Script1738884000000.groovy`
+- `AGENTS.md`
+
+## Not changed
+- `Scripts/MCP Server Tools Test (Raw HTTP)/Script1738881000000.groovy` — already uses `findTestObject('Fetch MCP')`
+- `Scripts/Katalon MCP Server Test/Script1738882000000.groovy` — already uses `findTestObject('Katalon MCP')`
+- `Scripts/MCP Server Tools Test (stdio)/Script1738885000000.groovy` — local binary, not a network URL
+- Step definitions (`MCPServerSteps.groovy`, etc.) — receive URLs from feature file Given steps, not hardcoded
+- Feature files — URLs in feature files serve as test data/documentation, not configuration
+
+## Verification
+- Open the project in Katalon Studio and verify the new `CoinGecko MCP SSE` test object appears in Object Repository
+- Run `MCP Server Tools Test` (Streamable HTTP) — should connect to mcp-fetch server
+- Run `MCP Server Tools Test (SSE)` — should connect to CoinGecko SSE server
+- Run `Transparent Proxy/MCP Server Tools Test (SSE)` — should connect to CoinGecko SSE server with SSL bypass
+
+
+If you need specific details from before exiting plan mode (like exact code snippets, error messages, or content you generated), read the full transcript at: /Users/coty/.REDACTED.jsonl
+
+---
+
+commit these changes to a feature branch and push

@@ -1,0 +1,30 @@
+{
+  "cli_version": "0.4.2",
+  "checkpoint_id": "239bd008f416",
+  "strategy": "manual-commit",
+  "branch": "centralize-mcp-server-urls",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "AGENTS.md",
+    "Object Repository/CoinGecko MCP SSE.rs",
+    "Scripts/MCP Server Tools Test (SSE)/Script1738884000000.groovy",
+    "Scripts/MCP Server Tools Test/Script1738878000000.groovy",
+    "Scripts/Transparent Proxy/MCP Server Tools Test (SSE)/Script1738884000000.groovy"
+  ],
+  "sessions": [
+    {
+      "metadata": "/23/9bd008f416/0/metadata.json",
+      "transcript": "/23/9bd008f416/0/full.jsonl",
+      "context": "/23/9bd008f416/0/context.md",
+      "content_hash": "/23/9bd008f416/0/content_hash.txt",
+      "prompt": "/23/9bd008f416/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 53,
+    "cache_creation_tokens": 90081,
+    "cache_read_tokens": 1994214,
+    "output_tokens": 4239,
+    "api_call_count": 49
+  }
+}
