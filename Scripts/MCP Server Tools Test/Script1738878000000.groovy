@@ -3,14 +3,19 @@ import io.modelcontextprotocol.client.McpSyncClient
 import io.modelcontextprotocol.client.transport.HttpClientStreamableHttpTransport
 import io.modelcontextprotocol.spec.McpSchema.ListToolsResult
 
+import static com.kms.katalon.core.testobject.ObjectRepository.findTestObject
+
 import com.katalon.mcp.utils.SslHelper
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 import java.time.Duration
 
 // Test configuration - mcp-fetch server (Streamable HTTP)
-String mcpServerBaseUrl = "https://remote.mcpservers.org"
-String mcpEndpoint = "/fetch/mcp"
+// URL centralized in Object Repository for single-point configuration
+String fullUrl = findTestObject('Fetch MCP').getRestUrl()
+URI parsedUri = URI.create(fullUrl)
+String mcpServerBaseUrl = "${parsedUri.scheme}://${parsedUri.host}" + (parsedUri.port > 0 ? ":${parsedUri.port}" : "")
+String mcpEndpoint = parsedUri.path
 
 println "=========================================="
 println "MCP Server Tools Test (Streamable HTTP)"

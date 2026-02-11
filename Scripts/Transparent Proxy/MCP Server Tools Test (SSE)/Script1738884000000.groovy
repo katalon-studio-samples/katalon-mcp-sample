@@ -3,13 +3,16 @@ import io.modelcontextprotocol.client.McpSyncClient
 import io.modelcontextprotocol.client.transport.HttpClientSseClientTransport
 import io.modelcontextprotocol.spec.McpSchema.ListToolsResult
 
+import static com.kms.katalon.core.testobject.ObjectRepository.findTestObject
+
 import com.katalon.mcp.utils.SslHelper
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 import java.time.Duration
 
 // Test configuration - CoinGecko public SSE MCP server
-String mcpServerSseUrl = "https://mcp.api.coingecko.com/sse"
+// URL centralized in Object Repository for single-point configuration
+String mcpServerSseUrl = findTestObject('CoinGecko MCP SSE').getRestUrl()
 
 println "=========================================="
 println "MCP Server Tools Test (SSE Transport + Transparent Proxy)"

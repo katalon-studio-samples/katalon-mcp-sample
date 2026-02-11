@@ -11,6 +11,7 @@ This is a **Katalon Studio WEBSERVICE project** for API test automation. Created
 **Target MCP Servers:**
 - `https://remote.mcpservers.org/fetch/mcp` (mcp-fetch server)
 - `https://mcp.katalon.com/mcp` (Katalon Public MCP Server)
+- `https://mcp.api.coingecko.com/sse` (CoinGecko Public MCP Server, SSE transport)
 
 ## Prerequisites
 
@@ -126,6 +127,15 @@ Uses Katalon's native WS keywords with JSON-RPC 2.0. No external dependencies ne
 
 **Object Repository:** `Object Repository/Fetch MCP` - Base request template with URL and headers
 
+**All network MCP server URLs** are centralized in the Object Repository (`.rs` files):
+| Test Object | URL | Used by |
+|-------------|-----|---------|
+| `Fetch MCP` | `https://remote.mcpservers.org/fetch/mcp` | Raw HTTP, Streamable HTTP |
+| `Katalon MCP` | `https://mcp.katalon.com/mcp` | Katalon MCP Server tests |
+| `CoinGecko MCP SSE` | `https://mcp.api.coingecko.com/sse` | SSE transport tests |
+
+SDK scripts read URLs from test objects via `findTestObject('Name').getRestUrl()` rather than hardcoding them.
+
 **Key implementation details:**
 
 1. **Using Object Repository Template:**
@@ -187,11 +197,13 @@ Uses MCP SDK 0.7.0 with SSE transport for servers that support the legacy SSE pr
 
 **Configuration for SSE transport:**
 ```groovy
+import static com.kms.katalon.core.testobject.ObjectRepository.findTestObject
 import io.modelcontextprotocol.client.McpClient
 import io.modelcontextprotocol.client.McpSyncClient
 import io.modelcontextprotocol.client.transport.HttpClientSseClientTransport
 
-String mcpServerSseUrl = "https://mcp.api.coingecko.com/sse"
+// URL centralized in Object Repository
+String mcpServerSseUrl = findTestObject('CoinGecko MCP SSE').getRestUrl()
 
 def transport = HttpClientSseClientTransport.builder(mcpServerSseUrl)
     .build()
@@ -216,12 +228,16 @@ Uses MCP SDK 0.15.0 with Streamable HTTP transport.
 
 **Configuration for Streamable HTTP transport:**
 ```groovy
+import static com.kms.katalon.core.testobject.ObjectRepository.findTestObject
 import io.modelcontextprotocol.client.McpClient
 import io.modelcontextprotocol.client.McpSyncClient
 import io.modelcontextprotocol.client.transport.HttpClientStreamableHttpTransport
 
-String mcpServerBaseUrl = "https://remote.mcpservers.org"
-String mcpEndpoint = "/fetch/mcp"
+// URL centralized in Object Repository; split into base URL + endpoint for SDK
+String fullUrl = findTestObject('Fetch MCP').getRestUrl()
+URI parsedUri = URI.create(fullUrl)
+String mcpServerBaseUrl = "${parsedUri.scheme}://${parsedUri.host}" + (parsedUri.port > 0 ? ":${parsedUri.port}" : "")
+String mcpEndpoint = parsedUri.path
 
 def transport = HttpClientStreamableHttpTransport.builder(mcpServerBaseUrl)
     .endpoint(mcpEndpoint)
