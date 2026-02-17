@@ -1,3 +1,26 @@
+/**
+ * Script: Transparent Proxy - SSL Certificate Test
+ * 
+ * Description:
+ *   Tests SSL certificate handling for both Katalon WS and java.net.http.HttpClient
+ *   (MCP SDK stack) against various badssl.com endpoints.
+ * 
+ * Test Approach:
+ *   Unit Test - Validates SslHelper utility for SSL bypass in transparent proxy environments.
+ * 
+ * Test Endpoints:
+ *   - Valid: https://badssl.com/
+ *   - Self-signed: https://self-signed.badssl.com/
+ *   - Expired: https://expired.badssl.com/
+ *   - Wrong host: https://wrong.host.badssl.com/
+ *   - Untrusted root: https://untrusted-root.badssl.com/
+ * 
+ * Test Steps:
+ *   1. Test standard HttpClient (should fail for invalid certificates)
+ *   2. Test SslHelper with trust-all (should succeed for all)
+ *   3. Report pass/fail counts
+ */
+
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse

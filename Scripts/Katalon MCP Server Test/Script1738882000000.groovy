@@ -1,3 +1,23 @@
+/**
+ * Script: Katalon MCP Server Test
+ * 
+ * Description:
+ *   Tests the Katalon Public MCP Server using Streamable HTTP transport with JSON-RPC calls.
+ * 
+ * Test Approach:
+ *   Raw HTTP - Uses Katalon's native WS keywords with manual JSON-RPC construction.
+ * 
+ * Target Server:
+ *   https://mcp.katalon.com/mcp
+ * 
+ * Test Steps:
+ *   1. Initialize MCP client connection via JSON-RPC
+ *   2. Verify server capabilities (tools, resources, prompts)
+ *   3. List available tools
+ *   4. Validate tool schemas and parameters
+ *   5. Execute sample tool calls
+ */
+
 import static com.kms.katalon.core.testobject.ObjectRepository.findTestObject
 
 import com.kms.katalon.core.testobject.RequestObject

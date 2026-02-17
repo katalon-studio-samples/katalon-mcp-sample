@@ -1,3 +1,28 @@
+/**
+ * Script: MCP Server Tools Test (stdio)
+ * 
+ * Description:
+ *   Tests a local MCP server using the MCP SDK with stdio transport.
+ * 
+ * Test Approach:
+ *   MCP Java SDK - Uses official MCP SDK 0.15.0 with stdio transport for local servers.
+ * 
+ * Target Server:
+ *   mcp-filesystem-server (local Go server)
+ * 
+ * Prerequisites:
+ *   - MCP SDK installed: ./gradlew clean katalonCopyDependencies
+ *   - Java 17
+ *   - Go server installed: go install github.com/mark3labs/mcp-filesystem-server@latest
+ * 
+ * Test Steps:
+ *   1. Create stdio transport with StdioClientTransport
+ *   2. Initialize connection to local server process
+ *   3. List available tools
+ *   4. Validate tool schemas
+ *   5. Clean up server process
+ */
+
 import io.modelcontextprotocol.client.McpClient
 import io.modelcontextprotocol.client.McpSyncClient
 import io.modelcontextprotocol.client.transport.ServerParameters

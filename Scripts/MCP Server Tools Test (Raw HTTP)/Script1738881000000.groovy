@@ -1,3 +1,23 @@
+/**
+ * Script: MCP Server Tools Test (Raw HTTP)
+ * 
+ * Description:
+ *   Tests the remote MCP server using raw HTTP/JSON-RPC calls via Katalon WS keywords.
+ * 
+ * Test Approach:
+ *   Raw HTTP - Uses Katalon's native WS keywords with manual JSON-RPC construction.
+ *   No external dependencies required.
+ * 
+ * Target Server:
+ *   mcp-fetch server (URL configured in Object Repository)
+ * 
+ * Test Steps:
+ *   1. Initialize MCP client connection via JSON-RPC
+ *   2. Handle session ID management
+ *   3. List available tools
+ *   4. Validate tool schemas and parameters
+ */
+
 import static com.kms.katalon.core.testobject.ObjectRepository.findTestObject
 
 import com.kms.katalon.core.testobject.RequestObject

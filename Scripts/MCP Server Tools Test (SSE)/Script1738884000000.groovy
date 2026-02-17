@@ -1,3 +1,27 @@
+/**
+ * Script: MCP Server Tools Test (SSE)
+ * 
+ * Description:
+ *   Tests a remote MCP server using the MCP SDK with SSE transport.
+ * 
+ * Test Approach:
+ *   MCP Java SDK - Uses official MCP SDK 0.15.0 with SSE (Server-Sent Events) transport.
+ * 
+ * Target Server:
+ *   CoinGecko Public MCP Server (https://mcp.api.coingecko.com/sse)
+ * 
+ * Prerequisites:
+ *   - MCP SDK installed: ./gradlew clean katalonCopyDependencies
+ *   - Java 17
+ * 
+ * Test Steps:
+ *   1. Create SSE transport with HttpClientSseClientTransport
+ *   2. Initialize MCP client connection
+ *   3. Verify server capabilities
+ *   4. List available tools
+ *   5. Validate tool schemas
+ */
+
 import io.modelcontextprotocol.client.McpClient
 import io.modelcontextprotocol.client.McpSyncClient
 import io.modelcontextprotocol.client.transport.HttpClientSseClientTransport

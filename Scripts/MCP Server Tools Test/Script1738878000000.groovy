@@ -1,3 +1,28 @@
+/**
+ * Script: MCP Server Tools Test (Streamable HTTP)
+ * 
+ * Description:
+ *   Tests the remote MCP server at https://remote.mcpservers.org/fetch/mcp to verify tools
+ *   are returned correctly using the MCP SDK with Streamable HTTP transport.
+ * 
+ * Test Approach:
+ *   MCP Java SDK - Uses official MCP SDK 0.15.0 with Streamable HTTP transport.
+ * 
+ * Target Server:
+ *   mcp-fetch server (URL configured in Object Repository)
+ * 
+ * Prerequisites:
+ *   - MCP SDK installed: ./gradlew clean katalonCopyDependencies
+ *   - Java 17
+ * 
+ * Test Steps:
+ *   1. Create Streamable HTTP transport with HttpClientStreamableHttpTransport
+ *   2. Initialize MCP client connection with SSL bypass for transparent proxies
+ *   3. Verify server capabilities
+ *   4. List available tools
+ *   5. Validate tool schemas and parameters
+ */
+
 import io.modelcontextprotocol.client.McpClient
 import io.modelcontextprotocol.client.McpSyncClient
 import io.modelcontextprotocol.client.transport.HttpClientStreamableHttpTransport

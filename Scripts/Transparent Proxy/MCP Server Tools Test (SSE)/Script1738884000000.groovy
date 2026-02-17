@@ -1,3 +1,29 @@
+/**
+ * Script: Transparent Proxy - MCP Server Tools Test (SSE)
+ * 
+ * Description:
+ *   Tests a remote MCP server using the MCP SDK with SSE transport, including preflight
+ *   detection of transparent HTTPS proxies and SSL bypass configuration.
+ * 
+ * Test Approach:
+ *   MCP Java SDK - Uses official MCP SDK 0.15.0 with SSE transport and SSL helper.
+ * 
+ * Target Server:
+ *   CoinGecko Public MCP Server (URL configured in Object Repository)
+ * 
+ * Prerequisites:
+ *   - MCP SDK installed: ./gradlew clean katalonCopyDependencies
+ *   - Java 17
+ * 
+ * Test Steps:
+ *   1. Preflight check for transparent proxy SSL interception
+ *   2. Create SSE transport with SSL bypass (SslHelper)
+ *   3. Initialize MCP client connection
+ *   4. Verify server capabilities
+ *   5. List available tools
+ *   6. Validate tool schemas
+ */
+
 import io.modelcontextprotocol.client.McpClient
 import io.modelcontextprotocol.client.McpSyncClient
 import io.modelcontextprotocol.client.transport.HttpClientSseClientTransport
