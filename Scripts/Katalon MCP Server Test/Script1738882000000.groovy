@@ -1,3 +1,20 @@
+/**
+ * Katalon MCP Server Test (Raw HTTP)
+ * 
+ * Tests the Katalon Public MCP Server using raw HTTP requests with JSON-RPC 2.0 protocol.
+ * This test verifies:
+ * - Connection initialization and session management
+ * - Server capabilities (tools, resources, prompts, tasks)
+ * - Tool listing and schema validation
+ * - Search tool execution
+ * 
+ * Uses Katalon's native WS keywords with JSON-RPC 2.0 format and SSE response parsing.
+ * No external MCP SDK dependencies required.
+ * 
+ * Target server: Katalon Public MCP Server (URL from Object Repository)
+ * Transport: Raw HTTP/JSON-RPC
+ */
+
 import static com.kms.katalon.core.testobject.ObjectRepository.findTestObject
 
 import com.kms.katalon.core.testobject.RequestObject

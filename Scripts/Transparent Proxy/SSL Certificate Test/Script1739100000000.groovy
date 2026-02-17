@@ -1,3 +1,22 @@
+/**
+ * SSL Certificate Test
+ * 
+ * Tests SSL certificate validation behavior with and without SslHelper.
+ * This test suite verifies:
+ * - Default HttpClient correctly rejects invalid certificates
+ * - SslHelper.createTrustAllClientBuilder() bypasses certificate validation
+ * 
+ * Uses badssl.com test endpoints to verify:
+ * - Valid certificates (should pass)
+ * - Self-signed certificates (should fail by default, pass with trust-all)
+ * - Expired certificates (should fail by default, pass with trust-all)
+ * - Wrong host certificates (should fail by default, pass with trust-all)
+ * - Untrusted root certificates (should fail by default, pass with trust-all)
+ * 
+ * Test Endpoints: badssl.com
+ * Purpose: Validate SslHelper utility for transparent proxy environments
+ */
+
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse

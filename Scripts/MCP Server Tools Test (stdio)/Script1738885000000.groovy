@@ -1,3 +1,20 @@
+/**
+ * MCP Server Tools Test (stdio Transport)
+ * 
+ * Tests MCP server connectivity and tool listing using the MCP Java SDK with stdio
+ * (standard input/output) transport for local MCP servers. This test verifies:
+ * - Connection initialization to a local MCP server process
+ * - Server capabilities (tools, resources, prompts)
+ * - Tool listing and schema validation
+ * 
+ * The test launches a local MCP filesystem server as a child process and communicates
+ * with it via stdin/stdout.
+ * 
+ * Target server: mcp-filesystem-server (local Go binary)
+ * Transport: stdio (standard input/output)
+ * SDK Version: 0.15.0
+ */
+
 import io.modelcontextprotocol.client.McpClient
 import io.modelcontextprotocol.client.McpSyncClient
 import io.modelcontextprotocol.client.transport.ServerParameters

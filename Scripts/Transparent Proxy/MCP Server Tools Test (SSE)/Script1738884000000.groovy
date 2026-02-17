@@ -1,3 +1,22 @@
+/**
+ * MCP Server Tools Test (SSE Transport + Transparent Proxy Support)
+ * 
+ * Tests MCP server connectivity and tool listing using the MCP Java SDK with SSE
+ * (Server-Sent Events) transport. This test includes transparent proxy detection
+ * and SSL certificate bypass using SslHelper to work behind corporate proxies.
+ * 
+ * This test verifies:
+ * - Transparent proxy SSL interception detection
+ * - Connection initialization to the remote MCP server via SSE
+ * - Server capabilities (tools, resources, prompts)
+ * - Tool listing and schema validation
+ * 
+ * Target server: CoinGecko Public MCP Server (URL from Object Repository)
+ * Transport: SSE (Server-Sent Events)
+ * SDK Version: 0.15.0
+ * SSL: Trust-all (bypasses certificate verification)
+ */
+
 import io.modelcontextprotocol.client.McpClient
 import io.modelcontextprotocol.client.McpSyncClient
 import io.modelcontextprotocol.client.transport.HttpClientSseClientTransport

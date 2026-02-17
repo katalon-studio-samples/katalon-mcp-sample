@@ -1,3 +1,17 @@
+/**
+ * MCP Server Tools Test (SSE Transport)
+ * 
+ * Tests MCP server connectivity and tool listing using the MCP Java SDK with SSE
+ * (Server-Sent Events) transport. This test verifies:
+ * - Connection initialization to the remote MCP server via SSE
+ * - Server capabilities (tools, resources, prompts)
+ * - Tool listing and schema validation
+ * 
+ * Target server: CoinGecko Public MCP Server (URL from Object Repository)
+ * Transport: SSE (Server-Sent Events)
+ * SDK Version: 0.15.0
+ */
+
 import io.modelcontextprotocol.client.McpClient
 import io.modelcontextprotocol.client.McpSyncClient
 import io.modelcontextprotocol.client.transport.HttpClientSseClientTransport
